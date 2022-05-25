@@ -17,8 +17,11 @@ ventana.iconphoto(True,icon)
 user=StringVar()
 password=StringVar()
 level=StringVar()
+levelU=StringVar()
 options=["Escoja una Opcion","1","2","3",]
+options1=["Escoja una Opcion","1","2","3",]
 level.set(options[0])
+levelU.set(options[0])
 
 #Creación frames
 menuInicial = Frame(ventana)
@@ -51,6 +54,14 @@ def cleanReturn(frameName,entry,entry2=None,entry3=None):
     framesManager(frameName)
 
 framesManager(menuInicial)
+
+def limpiarTablas(tabla):
+    if tabla == 1:
+        for item in tablaUsuarios.get_children():
+            tablaUsuarios.delete(item)
+    elif tabla == 2:
+        pass
+
 
 #imagenes
 bgMenuInicial=Image.open('IMAGES/menuInicial.png')
@@ -194,7 +205,7 @@ fondoMenuMenu=Label(menuMenuTablas, image=bgMenuTablas).place(x=0,y=0,relheight=
 
 #botones menu menu
 
-btMenuMenu1=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaUsuarios))
+btMenuMenu1=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaUsuarios())
 btMenuMenu1.place(x=755,y=30)
 
 btMenuMenu2=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProductos))
@@ -211,7 +222,95 @@ btMenuMenu4.place(x=755,y=340)
 #----------fondo menu tabla usuarios------
 fondoMenuTablaUsuarios=Label(menuTablaUsuarios, image=bgMenuTablaUsuarios).place(x=0,y=0,relheight=1,relwidth=1)
 
- 
+def changeState(bt,state):
+    if state==0:
+        bt.configure(state="normal")
+    if state==1:
+        bt.configure(state="disabled")
+
+def loadNewUsuario():
+    changeState(entryMenuTablaUsuarios1,0)
+    changeState(entryMenuTablaUsuarios2,0)
+    changeState(levelBoxU,0)
+
+def loadTablaUsuarios():
+    global a
+    a=1
+    limpiarTablas(1)
+    datos=dao.getTableInfo(1)
+    for row in datos:
+            tablaUsuarios.insert("",END,text=row[0], values=(row[1],row[2]))
+    changeState(entryMenuTablaUsuarios1,1)
+    changeState(entryMenuTablaUsuarios2,1)
+    changeState(levelBoxU,1)
+    changeState(btGuardarUsuario,0)
+    changeState(btActualizarUsuario,0)
+    changeState(btBorrarUsuario,0)
+    framesManager(menuTablaUsuarios)
+
+def guardarUsuario():
+    global a
+    usuario=(entryMenuTablaUsuarios1.get(),entryMenuTablaUsuarios2.get(),levelU.get())
+    if a==1:
+        dao.newUsuario(usuario)
+    else:
+        dao.updateUsuario(usuario)
+        a=1
+    cleanEntry(entryMenuTablaUsuarios1)
+    cleanEntry(entryMenuTablaUsuarios2)
+    changeState(entryMenuTablaUsuarios1,1)
+    changeState(entryMenuTablaUsuarios2,1)
+    changeState(levelBoxU,1)
+    changeState(btGuardarUsuario,0)
+    changeState(btActualizarUsuario,0)
+    changeState(btBorrarUsuario,0)
+    limpiarTablas(1)
+    loadTablaUsuarios()
+
+def modificarUsuario():
+    global a
+    a=a+1
+    selected = tablaUsuarios.focus()
+    clave = tablaUsuarios.item(selected,'text')
+    if clave== '':
+        messagebox.showwarning("Modificar", 'Debes seleccionar un elemento.')
+    else:
+        changeState(entryMenuTablaUsuarios1,0)
+        changeState(entryMenuTablaUsuarios2,0)
+        changeState(levelBoxU,0)
+        valores = tablaUsuarios.item(selected,'values')
+        nombre= tablaUsuarios.item(selected,'text')
+        nivel= tablaUsuarios.item(selected,'values')
+        cleanEntry(entryMenuTablaUsuarios1)
+        cleanEntry(entryMenuTablaUsuarios2)
+        entryMenuTablaUsuarios1.insert(0,nombre)
+        entryMenuTablaUsuarios2.insert(0,valores[0])
+        levelU.set(nivel[1])
+        changeState(btGuardarUsuario,0)
+        changeState(btActualizarUsuario,0)
+        changeState(btBorrarUsuario,0)
+        entryMenuTablaUsuarios1.focus()
+    return True
+
+def eliminarUsuario():
+    selected= tablaUsuarios.focus()
+
+    nombre= tablaUsuarios.item(selected,'text')
+    if nombre=="":
+        messagebox.showinfo(title="Error", message="Seleccione un elemento")
+    else:
+        valores= tablaUsuarios.item(selected,'values')
+        data= str(nombre)+ "," + valores[0]+ ", " + valores[1]
+        r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
+        if r==messagebox.YES:
+            n = dao.deleteUsuario(nombre)
+            if n == 1:
+                messagebox.showinfo(title="Eliminado", message="Elemento eliminado correctamente")
+                limpiarTablas(1)
+            else:
+                messagebox.showinfo(title="Error", message="No fue posible eliminar el elemento seleccionado")
+    loadTablaUsuarios()
+
 #entries menu tabla usuarios
 
 entryMenuTablaUsuarios1=Entry(menuTablaUsuarios, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
@@ -220,21 +319,29 @@ entryMenuTablaUsuarios1.place(x=160,y=230,height=30)
 entryMenuTablaUsuarios2=Entry(menuTablaUsuarios, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
 entryMenuTablaUsuarios2.place(x=160,y=320,height=30)
 
-entryMenuTablaUsuarios3=Entry(menuTablaUsuarios, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaUsuarios3.place(x=160,y=410,height=30)
+levelBoxU = OptionMenu(menuTablaUsuarios,levelU,*options)
+levelBoxU.place(x=160,y=400,width=200)
 
     #botones menu tabla usuarios
         #BOTON GUARDAR
-btGuardarUsuario = Button(menuTablaUsuarios, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarUsuario = Button(menuTablaUsuarios, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=loadNewUsuario)
 btGuardarUsuario.place(x=300,y=520)
 
         #BOTON ACTUALIZAR
-btActualizarUsuario = Button(menuTablaUsuarios, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarUsuario = Button(menuTablaUsuarios, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=modificarUsuario)
 btActualizarUsuario.place(x=650,y=519)
 
         #BOTON BORRAR
-btBorrarUsuario = Button(menuTablaUsuarios, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarUsuario = Button(menuTablaUsuarios, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=eliminarUsuario)
 btBorrarUsuario.place(x=1000,y=520)
+
+#Boton regresar
+btRegresarMenuUsuario = Button(menuTablaUsuarios, text= "REGRESAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=lambda: cleanReturn(menuMenuTablas, entryMenuTablaUsuarios1, entryMenuTablaUsuarios2))
+btRegresarMenuUsuario.place(x=140,y=450)
+
+#Boton guardar registro
+btGuardarMenuUsuario = Button(menuTablaUsuarios, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=guardarUsuario)
+btGuardarMenuUsuario.place(x=290,y=450)
 
         #CREACION TABLA
 tablaUsuarios=ttk.Treeview(menuTablaUsuarios, columns=("col1", "col2"))
@@ -249,10 +356,6 @@ tablaUsuarios.heading("col1", text="CLAVE", anchor=CENTER)
 tablaUsuarios.heading("col2", text="NIVEL", anchor=CENTER)
 
 tablaUsuarios.place(x=510,y=195,width=520,height=280)
-
-#prueba
-tablaUsuarios.insert("",END, text="Nico", values=("","UNO"))
-
 
 #-------------------------Tabla productos-------------------------------
 #----------fondo menu tabla productos---------

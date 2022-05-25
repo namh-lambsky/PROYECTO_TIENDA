@@ -20,7 +20,7 @@ class DAO():
     def getTableInfo(self,table):
         if table==1:
             try:
-                self.cursor.execute("SELECT * FROM Usuario")
+                self.cursor.execute("SELECT * FROM Usuarios")
                 result=self.cursor.fetchall()
                 return result
             except Exception as ex:
@@ -31,7 +31,7 @@ class DAO():
 #Crea un usuario apartir de un objeto llamado usuario
     def newUsuario(self,usuario):
         try:
-            sqlInstruction="INSERT INTO Usuarios(nomusu,clave,nivel) VALUES('{0}', aes_encrypt('{1}','cypherDB'), '{2}')"
+            sqlInstruction="INSERT INTO Usuarios(nomusu,clave,nivel) VALUES('{0}', '{1}', '{2}')"
             self.cursor.execute(sqlInstruction.format(usuario[0],usuario[1],usuario[2]))
             self.shopDB.commit()
         except Exception as ex:
@@ -39,7 +39,7 @@ class DAO():
 #Actualiza un usuario ya existente apartir de un objeto llamado usuario
     def updateUsuario(self,usuario):
         try:
-            sqlInstruction="UPDATE Usuarios SET nomusu='{0}', clave='{1}', nivel='{2}' WHERE nomusu='{0}'"
+            sqlInstruction="UPDATE Usuarios SET clave='{1}', nivel='{2}' WHERE nomusu='{0}'"
             self.cursor.execute(sqlInstruction.format(usuario[0],usuario[1],usuario[2]))
             self.shopDB.commit()
         except Exception as ex:
@@ -50,11 +50,13 @@ class DAO():
             sqlinstrution="DELETE FROM Usuarios WHERE nomusu='{0}'"
             self.cursor.execute(sqlinstrution.format(nomusu))
             self.shopDB.commit()
+            n=self.cursor.rowcount
+            return n
         except Exception as ex:
             print("Error al intentar la conexión: {0}".format(ex))
 
     def login(self,nomusu,password):
-        self.cursor.execute("SELECT cast(aes_decrypt(clave,'cypherDB') as char) FROM Usuarios WHERE nomusu='{0}'and clave='{1}' ".format(nomusu,password))
+        self.cursor.execute("SELECT clave FROM Usuarios WHERE nomusu='{0}'and clave='{1}' ".format(nomusu,password))
         if self.cursor.fetchall():
             messagebox.showinfo(title="Inicio de sesion correcto", message="Usuario y contraseña correcta, Bienvenido {0}".format(nomusu))
             return True
