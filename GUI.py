@@ -60,7 +60,8 @@ def limpiarTablas(tabla):
         for item in tablaUsuarios.get_children():
             tablaUsuarios.delete(item)
     elif tabla == 2:
-        pass
+        for item in tablaProducto.get_children():
+            tablaProducto.delete(item)
 
 
 #imagenes
@@ -108,7 +109,7 @@ btRegister = Button(menuInicial,text="REGISTRARSE",cursor="hand2",bg= "#57664E",
 btRegister.place(x=880,y=305)
 
 #-------------------MENU REGISTRO------------------------
-def validateEntryUser(tex,new_text):
+def validateEntryUser(text,new_text):
     if len(new_text) > 8:
         validation=False
     else:
@@ -205,16 +206,16 @@ fondoMenuMenu=Label(menuMenuTablas, image=bgMenuTablas).place(x=0,y=0,relheight=
 
 #botones menu menu
 
-btMenuMenu1=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaUsuarios())
+btMenuMenu1=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaUsuarios())
 btMenuMenu1.place(x=755,y=30)
 
-btMenuMenu2=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProductos))
+btMenuMenu2=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaProductos())
 btMenuMenu2.place(x=755,y=140)
 
-btMenuMenu3=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaClientes))
+btMenuMenu3=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaClientes))
 btMenuMenu3.place(x=755,y=240)
 
-btMenuMenu4=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProveedores))
+btMenuMenu4=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProveedores))
 btMenuMenu4.place(x=755,y=340)
 
 #-----------Creación tablas-------------
@@ -248,6 +249,21 @@ def loadTablaUsuarios():
     changeState(btBorrarUsuario,0)
     framesManager(menuTablaUsuarios)
 
+def loadTablaProductos():
+    global b
+    b=1
+    limpiarTablas(2)
+    datos=dao.getTableInfo(1)
+    for row in datos:
+            tablaProducto.insert("",END,text=row[0], values=(row[1],row[2]))
+    changeState(entryMenuTablaProductos1,1)
+    changeState(entryMenuTablaProductos2,1)
+    changeState(entryMenuTablaProductos3,1)
+    changeState(btGuardarProducto,0)
+    changeState(btActualizarProducto,0)
+    changeState(btBorrarProducto,0)
+    framesManager(menuTablaProductos)
+
 def guardarUsuario():
     global a
     usuario=(entryMenuTablaUsuarios1.get(),entryMenuTablaUsuarios2.get(),levelU.get())
@@ -266,6 +282,29 @@ def guardarUsuario():
     changeState(btBorrarUsuario,0)
     limpiarTablas(1)
     loadTablaUsuarios()
+
+
+def guardarProducto():
+    global b
+    producto=(entryMenuTablaProductos1.get(),entryMenuTablaProductos2.get(),entryMenuTablaProductos3.get())
+    if b==1:
+        dao.newProducto(producto)
+    else:
+        dao.updateProducto(producto)
+        a=1
+    cleanEntry(entryMenuTablaProductos1)
+    cleanEntry(entryMenuTablaProductos2)
+    cleanEntry(entryMenuTablaProductos3)
+    changeState(entryMenuTablaProductos1,1)
+    changeState(entryMenuTablaProductos2,1)
+    changeState(entryMenuTablaProductos3,1)
+    changeState(btGuardarProducto,0)
+    changeState(btActualizarProducto,0)
+    changeState(btBorrarProducto,0)
+    limpiarTablas(2)
+    loadTablaProductos()
+
+
 
 def modificarUsuario():
     global a
@@ -370,7 +409,7 @@ entryMenuTablaProductos2=Entry(menuTablaProductos, width=22, relief="flat", bg="
 entryMenuTablaProductos2.place(x=160,y=350,height=30)
 
 entryMenuTablaProductos3=Entry(menuTablaProductos, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaProductos3.place(x=160,y=410,height=30)
+entryMenuTablaProductos3.place(x=160,y=400,height=30)
 
     #botones menu tabla usuarios
         #BOTON GUARDAR

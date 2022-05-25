@@ -26,7 +26,12 @@ class DAO():
             except Exception as ex:
                 print("Error al intentar la conexión: {0}".format(ex))
         elif table==2:
-            pass
+            try:
+                self.cursor.execute("SELECT * FROM Productos")
+                result=self.cursor.fetchall()
+                return result
+            except Exception as ex:
+                print("Error al intentar la conexión: {0}".format(ex))
 #--------------------------------------Funciones Cliente----------------------------------------------
 #Crea un usuario apartir de un objeto llamado usuario
     def newUsuario(self,usuario):
