@@ -28,9 +28,10 @@ menuLogin = Frame(ventana)
 menuTablaProductos = Frame(ventana)
 menuTablaClientes=Frame(ventana)
 menuMenuTablas = Frame(ventana)
+menuTablaProveedores = Frame(ventana)
 
 #Lista y Carga previa de los frames
-frameList=[menuInicial,menuRegistro, menuTablaUsuarios, menuLogin, menuTablaProductos,menuTablaClientes, menuMenuTablas]
+frameList=[menuInicial,menuRegistro, menuTablaUsuarios, menuLogin, menuTablaProductos,menuTablaClientes, menuMenuTablas, menuTablaProveedores]
 for frame in frameList:
     frame.grid(row=0,column=0,sticky="nsew")
 
@@ -72,13 +73,18 @@ bgMenuTablaProductos=Image.open('IMAGES/tablaProductos.png')
 resizedImg=bgMenuTablaProductos.resize((1330,600))
 bgMenuTablaProductos=ImageTk.PhotoImage(resizedImg)
 
-bgMenuTablaClientes=Image.open('IMAGES/tablaProductos.png')
+bgMenuTablaClientes=Image.open('IMAGES/tablaCliente.png')
 resizedImg=bgMenuTablaClientes.resize((1330,600))
 bgMenuTablaClientes=ImageTk.PhotoImage(resizedImg)
 
 bgMenuTablas=Image.open('IMAGES/menuTablas.png')
 resizedImg=bgMenuTablas.resize((1330,600))
 bgMenuTablas=ImageTk.PhotoImage(resizedImg)
+
+bgMenuTablaProveedores=Image.open('IMAGES/proveedores.png')
+resizedImg=bgMenuTablaProveedores.resize((1330,600))
+bgMenuTablaProveedores=ImageTk.PhotoImage(resizedImg)
+
 
 #--------Creacion del fondo menu Inicial------
 fondoMenuInicial=Label(menuInicial,image=bgMenuInicial).place(x=0,y=0,relheight=1,relwidth=1)
@@ -178,18 +184,27 @@ entryLoginPassword.place(x=460,y=370,height=30)
 
 #botones menuLogin
 
-btLoginIngresar = Button(menuLogin, text= "INGRESAR",bg= "#57664E",width=15,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:login())
+btLoginIngresar = Button(menuLogin, text= "INGRESAR",bg= "#DBD0A1",width=15,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:login())
 btLoginIngresar.place(x=465,y=430)
 
-btLoginRegresar = Button(menuLogin, text= "REGRESAR",bg= "#57664E",width=15,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda: cleanReturn(menuInicial,entryLoginPassword,entryLoginUsuario))
+btLoginRegresar = Button(menuLogin, text= "REGRESAR",bg= "#DBD0A1",width=15,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda: cleanReturn(menuInicial,entryLoginPassword,entryLoginUsuario))
 btLoginRegresar.place(x=700,y=430)
 #menu Menu
 fondoMenuMenu=Label(menuMenuTablas, image=bgMenuTablas).place(x=0,y=0,relheight=1,relwidth=1)
 
 #botones menu menu
 
-btMenuMenu=Button(menuMenuTablas, bg= "#57664E",width=12,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaUsuarios))
-btMenuMenu.place(x=465,y=430)
+btMenuMenu1=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaUsuarios))
+btMenuMenu1.place(x=755,y=30)
+
+btMenuMenu2=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProductos))
+btMenuMenu2.place(x=755,y=140)
+
+btMenuMenu3=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaClientes))
+btMenuMenu3.place(x=755,y=240)
+
+btMenuMenu4=Button(menuMenuTablas, bg= "#DBD0A1",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProveedores))
+btMenuMenu4.place(x=755,y=340)
 
 #-----------Creación tablas-------------
 #Tabla usuarios
@@ -200,26 +215,26 @@ fondoMenuTablaUsuarios=Label(menuTablaUsuarios, image=bgMenuTablaUsuarios).place
 #entries menu tabla usuarios
 
 entryMenuTablaUsuarios1=Entry(menuTablaUsuarios, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaUsuarios1.place(x=360,y=170,height=30)
+entryMenuTablaUsuarios1.place(x=160,y=230,height=30)
 
 entryMenuTablaUsuarios2=Entry(menuTablaUsuarios, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaUsuarios2.place(x=360,y=370,height=30)
+entryMenuTablaUsuarios2.place(x=160,y=320,height=30)
 
 entryMenuTablaUsuarios3=Entry(menuTablaUsuarios, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaUsuarios3.place(x=360,y=570,height=30)
+entryMenuTablaUsuarios3.place(x=160,y=410,height=30)
 
     #botones menu tabla usuarios
         #BOTON GUARDAR
-btGuardarUsuario = Button(menuTablaUsuarios, text= "GUARDAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btGuardarUsuario.place(x=180,y=95)
+btGuardarUsuario = Button(menuTablaUsuarios, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarUsuario.place(x=300,y=520)
 
         #BOTON ACTUALIZAR
-btActualizarUsuario = Button(menuTablaUsuarios, text= "ACTUALIZAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btActualizarUsuario.place(x=180,y=205)
+btActualizarUsuario = Button(menuTablaUsuarios, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarUsuario.place(x=650,y=519)
 
         #BOTON BORRAR
-btBorrarUsuario = Button(menuTablaUsuarios, text= "BORRAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btBorrarUsuario.place(x=180,y=505)
+btBorrarUsuario = Button(menuTablaUsuarios, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarUsuario.place(x=1000,y=520)
 
         #CREACION TABLA
 tablaUsuarios=ttk.Treeview(menuTablaUsuarios, columns=("col1", "col2"))
@@ -233,7 +248,7 @@ tablaUsuarios.heading("#0", text="NOMBRE", anchor=CENTER)
 tablaUsuarios.heading("col1", text="CLAVE", anchor=CENTER)
 tablaUsuarios.heading("col2", text="NIVEL", anchor=CENTER)
 
-tablaUsuarios.place(x=810,y=150,width=520,height=280)
+tablaUsuarios.place(x=510,y=195,width=520,height=280)
 
 #prueba
 tablaUsuarios.insert("",END, text="Nico", values=("","UNO"))
@@ -246,26 +261,26 @@ fondoMenuTablaProductos=Label(menuTablaProductos, image=bgMenuTablaProductos).pl
     #entries menu tabla productos
 
 entryMenuTablaProductos1=Entry(menuTablaProductos, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaProductos1.place(x=460,y=370,height=30)
+entryMenuTablaProductos1.place(x=160,y=200,height=30)
 
 entryMenuTablaProductos2=Entry(menuTablaProductos, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaProductos2.place(x=460,y=470,height=30)
+entryMenuTablaProductos2.place(x=160,y=350,height=30)
 
 entryMenuTablaProductos3=Entry(menuTablaProductos, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaProductos3.place(y=570,height=30)
+entryMenuTablaProductos3.place(x=160,y=410,height=30)
 
     #botones menu tabla usuarios
         #BOTON GUARDAR
-btGuardarProducto = Button(menuTablaProductos, text= "GUARDAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btGuardarProducto.place(x=180,y=95)
+btGuardarProducto = Button(menuTablaProductos, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarProducto.place(x=300,y=520)
 
         #BOTON ACTUALIZAR
-btActualizarProducto = Button(menuTablaProductos, text= "ACTUALIZAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btActualizarProducto.place(x=180,y=205)
+btActualizarProducto = Button(menuTablaProductos, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarProducto.place(x=650,y=519)
 
         #BOTON BORRAR
-btBorrarProducto = Button(menuTablaProductos, text= "BORRAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btBorrarProducto.place(x=180,y=505)
+btBorrarProducto = Button(menuTablaProductos, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarProducto.place(x=1000,y=520)
 
         #CREACION TABLA
 tablaProducto=ttk.Treeview(menuTablaProductos, columns=("col1", "col2"))
@@ -279,10 +294,10 @@ tablaProducto.heading("#0", text="CÓDIGO PRODUCTO", anchor=CENTER)
 tablaProducto.heading("col1", text="NOMBRE PRODUCTO", anchor=CENTER)
 tablaProducto.heading("col2", text="PRECIO", anchor=CENTER)
 
-tablaProducto.place(x=410,y=150,width=520,height=280)
+tablaProducto.place(x=510,y=195,width=520,height=280)
 
 #prueba
-tablaProducto.insert("",END, text="PAPITAS", values=("","2.000"))
+tablaProducto.insert("",END, text="1", values=("PAPITAS","2.000"))
 
 #-------------------------Tabla clientes-------------------------------
 #----------fondo menu tabla clientes---------
@@ -291,41 +306,100 @@ fondoMenuTablaClientes=Label(menuTablaClientes, image=bgMenuTablaClientes).place
     #entries menu tabla productos
 
 entryMenuTablaClientes1=Entry(menuTablaClientes, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaClientes1.place(x=460,y=370,height=30)
+entryMenuTablaClientes1.place(x=160,y=200,height=30)
 
 entryMenuTablaClientes2=Entry(menuTablaClientes, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaClientes2.place(x=460,y=470,height=30)
+entryMenuTablaClientes2.place(x=160,y=270,height=30)
 
 entryMenuTablaClientes3=Entry(menuTablaClientes, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaClientes3.place(y=570,height=30)
+entryMenuTablaClientes3.place(x=160,y=340,height=30)
+
+entryMenuTablaClientes4=Entry(menuTablaClientes, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
+entryMenuTablaClientes4.place(x=160,y=410,height=30)
+
+entryMenuTablaClientes5=Entry(menuTablaClientes, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
+entryMenuTablaClientes5.place(x=160,y=470,height=30)
+
+    #botones menu tabla lientes
+        #BOTON GUARDAR
+btGuardarCliente = Button(menuTablaClientes, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarCliente.place(x=340,y=520)
+
+        #BOTON ACTUALIZAR
+btActualizarClientes = Button(menuTablaClientes, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarClientes.place(x=660,y=519)
+
+        #BOTON BORRAR
+btBorrarClientes = Button(menuTablaClientes, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarClientes.place(x=1000,y=520)
+
+        #CREACION TABLA
+tablaClientes=ttk.Treeview(menuTablaClientes, columns=("col1", "col2", "col3", "col4"))
+
+
+tablaClientes.column("#0",width=90, anchor=CENTER)
+tablaClientes.column("col1",width=90, anchor=CENTER)
+tablaClientes.column("col2",width=90, anchor=CENTER)
+tablaClientes.column("col3",width=90, anchor=CENTER)
+tablaClientes.column("col4",width=90, anchor=CENTER)
+
+
+
+tablaClientes.heading("#0", text="CÓDIGO CLIENTE", anchor=CENTER)
+tablaClientes.heading("col1", text="NOMBRE CLIENTE", anchor=CENTER)
+tablaClientes.heading("col2", text="DIRECCION", anchor=CENTER)
+tablaClientes.heading("col3", text="TELÉFONO", anchor=CENTER)
+tablaClientes.heading("col4", text="CIUDAD", anchor=CENTER)
+
+
+tablaClientes.place(x=510,y=195,width=520,height=280)
+
+#prueba
+tablaClientes.insert("",END, text="UNO", values=("NICO","CRA 1-A-2", "3028384584", "BOGOTÁ"))
+
+
+#-------------------------Tabla provedores-------------------------------
+#----------fondo menu tabla provedores---------
+fondoMenuTablaProveedores=Label(menuTablaProveedores, image=bgMenuTablaProveedores).place(x=0,y=0,relheight=1,relwidth=1)
+
+    #entries menu tabla productos
+
+entryMenuTablaProveedores1=Entry(menuTablaProveedores, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
+entryMenuTablaProveedores1.place(x=160,y=235,height=30)
+
+entryMenuTablaProveedores2=Entry(menuTablaProveedores, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
+entryMenuTablaProveedores2.place(x=160,y=315,height=30)
+
+entryMenuTablaProveedores3=Entry(menuTablaProveedores, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
+entryMenuTablaProveedores3.place(x=160,y=410,height=30)
 
     #botones menu tabla usuarios
         #BOTON GUARDAR
-btGuardarCliente = Button(menuTablaClientes, text= "GUARDAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btGuardarCliente.place(x=180,y=95)
+btGuardarProveedores= Button(menuTablaProveedores, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarProveedores.place(x=300,y=520)
 
         #BOTON ACTUALIZAR
-btActualizarClientes = Button(menuTablaClientes, text= "ACTUALIZAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btActualizarClientes.place(x=180,y=205)
+btActualizarProveedores = Button(menuTablaProveedores, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarProveedores.place(x=650,y=519)
 
         #BOTON BORRAR
-btBorrarClientes = Button(menuTablaClientes, text= "BORRAR",bg= "#57664E",width=22,height=2,relief="flat",fg="white",font=("Century Gothic",12))
-btBorrarClientes.place(x=180,y=505)
+btBorrarProveedores = Button(menuTablaProveedores, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarProveedores.place(x=1000,y=520)
 
         #CREACION TABLA
-tablaProducto=ttk.Treeview(menuTablaProductos, columns=("col1", "col2"))
+tablaProveedores=ttk.Treeview(menuTablaProveedores, columns=("col1", "col2"))
 
 
-tablaProducto.column("#0",width=90, anchor=CENTER)
-tablaProducto.column("col1",width=90, anchor=CENTER)
-tablaProducto.column("col2",width=90, anchor=CENTER)
+tablaProveedores.column("#0",width=90, anchor=CENTER)
+tablaProveedores.column("col1",width=90, anchor=CENTER)
+tablaProveedores.column("col2",width=90, anchor=CENTER)
 
-tablaProducto.heading("#0", text="CÓDIGO PRODUCTO", anchor=CENTER)
-tablaProducto.heading("col1", text="NOMBRE PRODUCTO", anchor=CENTER)
-tablaProducto.heading("col2", text="PRECIO", anchor=CENTER)
+tablaProveedores.heading("#0", text="CÓDIGO PROVEEDOR", anchor=CENTER)
+tablaProveedores.heading("col1", text="CÓDIGO PRODUCTO", anchor=CENTER)
+tablaProveedores.heading("col2", text="PRECIO", anchor=CENTER)
 
-tablaProducto.place(x=410,y=150,width=520,height=280)
+tablaProveedores.place(x=510,y=195,width=520,height=280)
 
 #prueba
-tablaProducto.insert("",END, text="PAPITAS", values=("","2.000"))
+tablaProveedores.insert("",END, text="UNO", values=("UNO","1.000"))
 ventana.mainloop()
