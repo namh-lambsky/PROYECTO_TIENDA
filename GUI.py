@@ -71,7 +71,7 @@ def limpiarTablas(tabla):
             tablaClientes.delete(item)
     elif tabla ==4:
         for item in tablaProveedores.get_children():
-            tablaProducto.delete(item)
+            tablaProveedores.delete(item)
 
 def changeState(bt,state):
     if state==0:
@@ -444,7 +444,7 @@ def eliminarProducto():
         data= str(nombre)+ ", " + valores[0]+ ", " + valores[1]
         r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
         if r==messagebox.YES:
-            n = dao.deleteUsuario(nombre)
+            n = dao.deleteProducto(nombre)
             if n == 1:
                 messagebox.showinfo(title="Eliminado", message="Elemento eliminado correctamente")
                 limpiarTablas(1)
@@ -510,12 +510,12 @@ def loadNewCliente():
     changeState(entryMenuTablaClientes5,0)
 
 def loadTablaClientes():
-    global c
-    c=1
+    global t
+    t=1
     limpiarTablas(3)
     datos=dao.getTableInfo(3)
     for row in datos:
-            tablaProducto.insert("",END,text=row[0], values=(row[1],row[2],row[3],row[4]))
+        tablaProducto.insert("",END,text=row[0], values=(row[1],row[2],row[3],row[4]))
     changeState(entryMenuTablaClientes1,1)
     changeState(entryMenuTablaClientes2,1)
     changeState(entryMenuTablaClientes3,1)
@@ -527,13 +527,13 @@ def loadTablaClientes():
     framesManager(menuTablaClientes)
 
 def guardarCliente():
+    global t
     cliente=(entryMenuTablaClientes1.get(),entryMenuTablaClientes2.get(),entryMenuTablaClientes3.get(),entryMenuTablaClientes4.get(),entryMenuTablaClientes5.get())
-    global c
-    if c==1:
+    if t==1:
         dao.newCliente(cliente)
     else:
         dao.updateCliente(cliente)
-        c=1
+        t=1
     cleanEntry(entryMenuTablaClientes1)
     cleanEntry(entryMenuTablaClientes2)
     cleanEntry(entryMenuTablaClientes3)
@@ -551,8 +551,8 @@ def guardarCliente():
     loadTablaClientes()
 
 def modificarCliente():
-    global c
-    c=c+1
+    global t
+    t=t+1
     selected = tablaClientes.focus()
     codclie = tablaClientes.item(selected,'text')
     if codclie== '':
@@ -591,7 +591,7 @@ def eliminarCliente():
         data= str(nombre)+ ", " + valores[0]+ ", " + valores[1]
         r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
         if r==messagebox.YES:
-            n = dao.deleteUsuario(nombre)
+            n = dao.deleteClientes(nombre)
             if n == 1:
                 messagebox.showinfo(title="Eliminado", message="Elemento eliminado correctamente")
                 limpiarTablas(1)
@@ -632,12 +632,12 @@ btActualizarClientes.place(x=660,y=519)
 btBorrarClientes = Button(menuTablaClientes, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command= eliminarCliente)
 btBorrarClientes.place(x=1000,y=520)
 
-btRegresarMenuClientes = Button(menuTablaProductos, text= "REGRESAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=lambda: cleanReturn(menuMenuTablas, entryMenuTablaClientes1, entryMenuTablaClientes2,entryMenuTablaClientes3,entryMenuTablaClientes4,entryMenuTablaClientes5))
-btRegresarMenuClientes.place(x=140,y=450)
+btRegresarMenuClientes = Button(menuTablaClientes, text= "REGRESAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=lambda: cleanReturn(menuMenuTablas, entryMenuTablaClientes1, entryMenuTablaClientes2,entryMenuTablaClientes3,entryMenuTablaClientes4,entryMenuTablaClientes5))
+btRegresarMenuClientes.place(x=1080,y=450)
 
 #Boton guardar registro
-btGuardarMenuClientes = Button(menuTablaProductos, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=guardarCliente)
-btGuardarMenuClientes.place(x=290,y=450)
+btGuardarMenuClientes = Button(menuTablaClientes, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=guardarCliente)
+btGuardarMenuClientes.place(x=1080,y=350)
 
         #CREACION TABLA
 tablaClientes=ttk.Treeview(menuTablaClientes, columns=("col1", "col2", "col3", "col4"))
@@ -649,20 +649,13 @@ tablaClientes.column("col2",width=90, anchor=CENTER)
 tablaClientes.column("col3",width=90, anchor=CENTER)
 tablaClientes.column("col4",width=90, anchor=CENTER)
 
-
-
 tablaClientes.heading("#0", text="CÓDIGO CLIENTE", anchor=CENTER)
 tablaClientes.heading("col1", text="NOMBRE CLIENTE", anchor=CENTER)
 tablaClientes.heading("col2", text="DIRECCION", anchor=CENTER)
 tablaClientes.heading("col3", text="TELÉFONO", anchor=CENTER)
 tablaClientes.heading("col4", text="CIUDAD", anchor=CENTER)
 
-
 tablaClientes.place(x=510,y=195,width=520,height=280)
-
-#prueba
-tablaClientes.insert("",END, text="UNO", values=("NICO","CRA 1-A-2", "3028384584", "BOGOTÁ"))
-
 
 #-------------------------Tabla provedores-------------------------------
 #----------fondo menu tabla provedores---------

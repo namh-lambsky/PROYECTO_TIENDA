@@ -39,6 +39,13 @@ class DAO():
                 return result
             except Exception as ex:
                 print("Error al intentar la conexión: {0}".format(ex))
+        elif table==4:
+            try:
+                self.cursor.execute("SELECT * FROM Proveedores")
+                result=self.cursor.fetchall()
+                return result
+            except Exception as ex:
+                print("Error al intentar la conexión: {0}".format(ex))
 #--------------------------------------Funciones Cliente----------------------------------------------
 #Crea un usuario apartir de un objeto llamado usuario
     def newUsuario(self,usuario):
@@ -80,7 +87,7 @@ class DAO():
 
     def newProducto(self,producto):
         try:
-            sqlInstruction="INSERT INTO Productos(idprov,codprod,costo) VALUES('{0}', '{1}', '{2}')"
+            sqlInstruction="INSERT INTO Productos(codprod,nomprod,costo) VALUES('{0}', '{1}', '{2}')"
             self.cursor.execute(sqlInstruction.format(producto[0],producto[1],producto[2]))
             self.shopDB.commit()
         except Exception as ex:
@@ -89,7 +96,7 @@ class DAO():
 #Actualiza un usuario ya existente apartir de un objeto llamado usuario
     def updateProducto(self,producto):
         try:
-            sqlInstruction="UPDATE Productos SET codprod='{1}', costo='{2}' WHERE idprov='{0}'"
+            sqlInstruction="UPDATE Productos SET nomprod='{1}', costo='{2}' WHERE codprod='{0}'"
             self.cursor.execute(sqlInstruction.format(producto[0],producto[1],producto[2]))
             self.shopDB.commit()
         except Exception as ex:
@@ -154,7 +161,7 @@ class DAO():
 
     def deleteProveedor(self,codprod):
         try:
-            sqlinstrution="DELETE FROM Proveedor WHERE codprod='{0}'"
+            sqlinstrution="DELETE FROM Proveedores WHERE codprod='{0}'"
             self.cursor.execute(sqlinstrution.format(codprod))
             self.shopDB.commit()
             n=self.cursor.rowcount
