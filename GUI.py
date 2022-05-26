@@ -45,12 +45,16 @@ def framesManager(frameName):
 def cleanEntry(entry):
     entry.delete("0","end")
 
-def cleanReturn(frameName,entry,entry2=None,entry3=None):
+def cleanReturn(frameName,entry,entry2=None,entry3=None,entry4=None,entry5=None):
     cleanEntry(entry)
     if entry2!=None:
         cleanEntry(entry2)
     elif entry3!=None:
         cleanEntry(entry3)
+    elif entry4!=None:
+        cleanEntry(entry4)
+    elif entry5!=None:
+        cleanEntry(entry5)
     framesManager(frameName)
 
 framesManager(menuInicial)
@@ -62,7 +66,18 @@ def limpiarTablas(tabla):
     elif tabla == 2:
         for item in tablaProducto.get_children():
             tablaProducto.delete(item)
+    elif tabla ==3:
+        for item in tablaClientes.get_children():
+            tablaClientes.delete(item)
+    elif tabla ==4:
+        for item in tablaProveedores.get_children():
+            tablaProducto.delete(item)
 
+def changeState(bt,state):
+    if state==0:
+        bt.configure(state="normal")
+    if state==1:
+        bt.configure(state="disabled")
 
 #imagenes
 bgMenuInicial=Image.open('IMAGES/menuInicial.png')
@@ -212,22 +227,16 @@ btMenuMenu1.place(x=755,y=30)
 btMenuMenu2=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaProductos())
 btMenuMenu2.place(x=755,y=140)
 
-btMenuMenu3=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaClientes))
+btMenuMenu3=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaClientes())
 btMenuMenu3.place(x=755,y=240)
 
-btMenuMenu4=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:framesManager(menuTablaProveedores))
+btMenuMenu4=Button(menuMenuTablas, bg= "#F2F4F3",width=5,height=1,relief="flat",fg="black",font=("Century Gothic",12),command=lambda:loadTablaProveedores())
 btMenuMenu4.place(x=755,y=340)
 
 #-----------Creación tablas-------------
 #Tabla usuarios
 #----------fondo menu tabla usuarios------
 fondoMenuTablaUsuarios=Label(menuTablaUsuarios, image=bgMenuTablaUsuarios).place(x=0,y=0,relheight=1,relwidth=1)
-
-def changeState(bt,state):
-    if state==0:
-        bt.configure(state="normal")
-    if state==1:
-        bt.configure(state="disabled")
 
 def loadNewUsuario():
     changeState(entryMenuTablaUsuarios1,0)
@@ -249,21 +258,6 @@ def loadTablaUsuarios():
     changeState(btBorrarUsuario,0)
     framesManager(menuTablaUsuarios)
 
-def loadTablaProductos():
-    global b
-    b=1
-    limpiarTablas(2)
-    datos=dao.getTableInfo(1)
-    for row in datos:
-            tablaProducto.insert("",END,text=row[0], values=(row[1],row[2]))
-    changeState(entryMenuTablaProductos1,1)
-    changeState(entryMenuTablaProductos2,1)
-    changeState(entryMenuTablaProductos3,1)
-    changeState(btGuardarProducto,0)
-    changeState(btActualizarProducto,0)
-    changeState(btBorrarProducto,0)
-    framesManager(menuTablaProductos)
-
 def guardarUsuario():
     global a
     usuario=(entryMenuTablaUsuarios1.get(),entryMenuTablaUsuarios2.get(),levelU.get())
@@ -282,29 +276,6 @@ def guardarUsuario():
     changeState(btBorrarUsuario,0)
     limpiarTablas(1)
     loadTablaUsuarios()
-
-
-def guardarProducto():
-    global b
-    producto=(entryMenuTablaProductos1.get(),entryMenuTablaProductos2.get(),entryMenuTablaProductos3.get())
-    if b==1:
-        dao.newProducto(producto)
-    else:
-        dao.updateProducto(producto)
-        a=1
-    cleanEntry(entryMenuTablaProductos1)
-    cleanEntry(entryMenuTablaProductos2)
-    cleanEntry(entryMenuTablaProductos3)
-    changeState(entryMenuTablaProductos1,1)
-    changeState(entryMenuTablaProductos2,1)
-    changeState(entryMenuTablaProductos3,1)
-    changeState(btGuardarProducto,0)
-    changeState(btActualizarProducto,0)
-    changeState(btBorrarProducto,0)
-    limpiarTablas(2)
-    loadTablaProductos()
-
-
 
 def modificarUsuario():
     global a
@@ -339,7 +310,7 @@ def eliminarUsuario():
         messagebox.showinfo(title="Error", message="Seleccione un elemento")
     else:
         valores= tablaUsuarios.item(selected,'values')
-        data= str(nombre)+ "," + valores[0]+ ", " + valores[1]
+        data= str(nombre)+ ", " + valores[0]+ ", " + valores[1]
         r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
         if r==messagebox.YES:
             n = dao.deleteUsuario(nombre)
@@ -397,6 +368,90 @@ tablaUsuarios.heading("col2", text="NIVEL", anchor=CENTER)
 tablaUsuarios.place(x=510,y=195,width=520,height=280)
 
 #-------------------------Tabla productos-------------------------------
+def loadNewProducto():
+    changeState(entryMenuTablaProductos1,0)
+    changeState(entryMenuTablaProductos2,0)
+    changeState(entryMenuTablaProductos3,0)
+
+def loadTablaProductos():
+    global b
+    b=1
+    limpiarTablas(2)
+    datos=dao.getTableInfo(2)
+    for row in datos:
+            tablaProducto.insert("",END,text=row[0], values=(row[1],row[2]))
+    changeState(entryMenuTablaProductos1,1)
+    changeState(entryMenuTablaProductos2,1)
+    changeState(entryMenuTablaProductos3,1)
+    changeState(btGuardarProducto,0)
+    changeState(btActualizarProducto,0)
+    changeState(btBorrarProducto,0)
+    framesManager(menuTablaProductos)
+
+def guardarProducto():
+    global b
+    producto=(entryMenuTablaProductos1.get(),entryMenuTablaProductos2.get(),entryMenuTablaProductos3.get())
+    if b==1:
+        dao.newProducto(producto)
+    else:
+        dao.updateProducto(producto)
+        b=1
+    cleanEntry(entryMenuTablaProductos1)
+    cleanEntry(entryMenuTablaProductos2)
+    cleanEntry(entryMenuTablaProductos3)
+    changeState(entryMenuTablaProductos1,1)
+    changeState(entryMenuTablaProductos2,1)
+    changeState(entryMenuTablaProductos3,1)
+    changeState(btGuardarProducto,0)
+    changeState(btActualizarProducto,0)
+    changeState(btBorrarProducto,0)
+    limpiarTablas(2)
+    loadTablaProductos()
+
+def modificarProducto():
+    global b
+    b=b+1
+    selected = tablaProducto.focus()
+    codprod = tablaProducto.item(selected,'text')
+    if codprod== '':
+        messagebox.showwarning("Modificar", 'Debes seleccionar un elemento.')
+    else:
+        changeState(entryMenuTablaProductos1,0)
+        changeState(entryMenuTablaProductos2,0)
+        changeState(entryMenuTablaProductos3,0)
+        valores = tablaProducto.item(selected,'values')
+        nombre= tablaProducto.item(selected,'text')
+        cleanEntry(entryMenuTablaProductos1)
+        cleanEntry(entryMenuTablaProductos2)
+        cleanEntry(entryMenuTablaProductos3)
+        entryMenuTablaProductos1.insert(0,nombre)
+        entryMenuTablaProductos2.insert(0,valores[0])
+        entryMenuTablaProductos3.insert(0,valores[1])
+        changeState(btGuardarProducto,0)
+        changeState(btActualizarProducto,0)
+        changeState(btBorrarProducto,0)
+        entryMenuTablaProveedores1.focus()
+    return True
+
+def eliminarProducto():
+    selected= tablaProducto.focus()
+
+    nombre= tablaProducto.item(selected,'text')
+    if nombre=="":
+        messagebox.showinfo(title="Error", message="Seleccione un elemento")
+    else:
+        valores= tablaProducto.item(selected,'values')
+        data= str(nombre)+ ", " + valores[0]+ ", " + valores[1]
+        r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
+        if r==messagebox.YES:
+            n = dao.deleteUsuario(nombre)
+            if n == 1:
+                messagebox.showinfo(title="Eliminado", message="Elemento eliminado correctamente")
+                limpiarTablas(1)
+            else:
+                messagebox.showinfo(title="Error", message="No fue posible eliminar el elemento seleccionado")
+    loadTablaProductos()
+
 #----------fondo menu tabla productos---------
 fondoMenuTablaProductos=Label(menuTablaProductos, image=bgMenuTablaProductos).place(x=0,y=0,relheight=1,relwidth=1)
 
@@ -406,23 +461,30 @@ entryMenuTablaProductos1=Entry(menuTablaProductos, width=22, relief="flat", bg="
 entryMenuTablaProductos1.place(x=160,y=200,height=30)
 
 entryMenuTablaProductos2=Entry(menuTablaProductos, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
-entryMenuTablaProductos2.place(x=160,y=350,height=30)
+entryMenuTablaProductos2.place(x=160,y=300,height=30)
 
 entryMenuTablaProductos3=Entry(menuTablaProductos, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
 entryMenuTablaProductos3.place(x=160,y=400,height=30)
 
     #botones menu tabla usuarios
         #BOTON GUARDAR
-btGuardarProducto = Button(menuTablaProductos, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarProducto = Button(menuTablaProductos, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=loadNewProducto)
 btGuardarProducto.place(x=300,y=520)
 
         #BOTON ACTUALIZAR
-btActualizarProducto = Button(menuTablaProductos, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarProducto = Button(menuTablaProductos, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=modificarProducto)
 btActualizarProducto.place(x=650,y=519)
 
         #BOTON BORRAR
-btBorrarProducto = Button(menuTablaProductos, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarProducto = Button(menuTablaProductos, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12), command=eliminarProducto)
 btBorrarProducto.place(x=1000,y=520)
+
+btRegresarMenuProducto = Button(menuTablaProductos, text= "REGRESAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=lambda: cleanReturn(menuMenuTablas, entryMenuTablaProductos1, entryMenuTablaProductos2,entryMenuTablaProductos3))
+btRegresarMenuProducto.place(x=140,y=450)
+
+#Boton guardar registro
+btGuardarMenuProducto = Button(menuTablaProductos, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=guardarProducto)
+btGuardarMenuProducto.place(x=290,y=450)
 
         #CREACION TABLA
 tablaProducto=ttk.Treeview(menuTablaProductos, columns=("col1", "col2"))
@@ -438,10 +500,105 @@ tablaProducto.heading("col2", text="PRECIO", anchor=CENTER)
 
 tablaProducto.place(x=510,y=195,width=520,height=280)
 
-#prueba
-tablaProducto.insert("",END, text="1", values=("PAPITAS","2.000"))
-
 #-------------------------Tabla clientes-------------------------------
+
+def loadNewCliente():
+    changeState(entryMenuTablaClientes1,0)
+    changeState(entryMenuTablaClientes2,0)
+    changeState(entryMenuTablaClientes3,0)
+    changeState(entryMenuTablaClientes4,0)
+    changeState(entryMenuTablaClientes5,0)
+
+def loadTablaClientes():
+    global c
+    c=1
+    limpiarTablas(3)
+    datos=dao.getTableInfo(3)
+    for row in datos:
+            tablaProducto.insert("",END,text=row[0], values=(row[1],row[2],row[3],row[4]))
+    changeState(entryMenuTablaClientes1,1)
+    changeState(entryMenuTablaClientes2,1)
+    changeState(entryMenuTablaClientes3,1)
+    changeState(entryMenuTablaClientes4,1)
+    changeState(entryMenuTablaClientes5,1)
+    changeState(btGuardarCliente,0)
+    changeState(btActualizarClientes,0)
+    changeState(btBorrarClientes,0)
+    framesManager(menuTablaClientes)
+
+def guardarCliente():
+    cliente=(entryMenuTablaClientes1.get(),entryMenuTablaClientes2.get(),entryMenuTablaClientes3.get(),entryMenuTablaClientes4.get(),entryMenuTablaClientes5.get())
+    global c
+    if c==1:
+        dao.newCliente(cliente)
+    else:
+        dao.updateCliente(cliente)
+        c=1
+    cleanEntry(entryMenuTablaClientes1)
+    cleanEntry(entryMenuTablaClientes2)
+    cleanEntry(entryMenuTablaClientes3)
+    cleanEntry(entryMenuTablaClientes4)
+    cleanEntry(entryMenuTablaClientes5)
+    changeState(entryMenuTablaClientes1,1)
+    changeState(entryMenuTablaClientes2,1)
+    changeState(entryMenuTablaClientes3,1)
+    changeState(entryMenuTablaClientes4,1)
+    changeState(entryMenuTablaClientes5,1)
+    changeState(btGuardarCliente,0)
+    changeState(btActualizarClientes,0)
+    changeState(btBorrarClientes,0)
+    limpiarTablas(3)
+    loadTablaClientes()
+
+def modificarCliente():
+    global c
+    c=c+1
+    selected = tablaClientes.focus()
+    codclie = tablaClientes.item(selected,'text')
+    if codclie== '':
+        messagebox.showwarning("Modificar", 'Debes seleccionar un elemento.')
+    else:
+        changeState(entryMenuTablaClientes1,0)
+        changeState(entryMenuTablaClientes2,0)
+        changeState(entryMenuTablaClientes3,0)
+        changeState(entryMenuTablaClientes4,0)
+        changeState(entryMenuTablaClientes5,0)
+        valores = tablaClientes.item(selected,'values')
+        nombre= tablaClientes.item(selected,'text')
+        cleanEntry(entryMenuTablaClientes1)
+        cleanEntry(entryMenuTablaClientes2)
+        cleanEntry(entryMenuTablaClientes3)
+        cleanEntry(entryMenuTablaClientes4)
+        cleanEntry(entryMenuTablaClientes5)
+        entryMenuTablaClientes1.insert(0,nombre)
+        entryMenuTablaClientes2.insert(0,valores[0])
+        entryMenuTablaClientes3.insert(0,valores[1])
+        entryMenuTablaClientes4.insert(0,valores[2])
+        entryMenuTablaClientes5.insert(0,valores[3])
+        changeState(btGuardarUsuario,0)
+        changeState(btActualizarUsuario,0)
+        changeState(btBorrarUsuario,0)
+        entryMenuTablaUsuarios1.focus()
+    return True
+
+def eliminarCliente():
+    selected= tablaClientes.focus()
+    nombre= tablaClientes.item(selected,'text')
+    if nombre=="":
+        messagebox.showinfo(title="Error", message="Seleccione un elemento")
+    else:
+        valores= tablaClientes.item(selected,'values')
+        data= str(nombre)+ ", " + valores[0]+ ", " + valores[1]
+        r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
+        if r==messagebox.YES:
+            n = dao.deleteUsuario(nombre)
+            if n == 1:
+                messagebox.showinfo(title="Eliminado", message="Elemento eliminado correctamente")
+                limpiarTablas(1)
+            else:
+                messagebox.showinfo(title="Error", message="No fue posible eliminar el elemento seleccionado")
+    loadTablaClientes()
+
 #----------fondo menu tabla clientes---------
 fondoMenuTablaClientes=Label(menuTablaClientes, image=bgMenuTablaClientes).place(x=0,y=0,relheight=1,relwidth=1)
 
@@ -462,18 +619,25 @@ entryMenuTablaClientes4.place(x=160,y=410,height=30)
 entryMenuTablaClientes5=Entry(menuTablaClientes, width=22, relief="flat", bg="#DBD0A1" ,fg="black",font=("Century Gothic",12))
 entryMenuTablaClientes5.place(x=160,y=470,height=30)
 
-    #botones menu tabla lientes
+    #botones menu tabla clientes
         #BOTON GUARDAR
-btGuardarCliente = Button(menuTablaClientes, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btGuardarCliente = Button(menuTablaClientes, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=loadNewCliente)
 btGuardarCliente.place(x=340,y=520)
 
         #BOTON ACTUALIZAR
-btActualizarClientes = Button(menuTablaClientes, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btActualizarClientes = Button(menuTablaClientes, text= "ACTUALIZAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=modificarCliente)
 btActualizarClientes.place(x=660,y=519)
 
         #BOTON BORRAR
-btBorrarClientes = Button(menuTablaClientes, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12))
+btBorrarClientes = Button(menuTablaClientes, text= "BORRAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command= eliminarCliente)
 btBorrarClientes.place(x=1000,y=520)
+
+btRegresarMenuClientes = Button(menuTablaProductos, text= "REGRESAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=lambda: cleanReturn(menuMenuTablas, entryMenuTablaClientes1, entryMenuTablaClientes2,entryMenuTablaClientes3,entryMenuTablaClientes4,entryMenuTablaClientes5))
+btRegresarMenuClientes.place(x=140,y=450)
+
+#Boton guardar registro
+btGuardarMenuClientes = Button(menuTablaProductos, text= "GUARDAR",bg= "#DBD0A1",width=12,height=1,relief="flat",fg="white",font=("Century Gothic",12),command=guardarCliente)
+btGuardarMenuClientes.place(x=290,y=450)
 
         #CREACION TABLA
 tablaClientes=ttk.Treeview(menuTablaClientes, columns=("col1", "col2", "col3", "col4"))
@@ -502,6 +666,91 @@ tablaClientes.insert("",END, text="UNO", values=("NICO","CRA 1-A-2", "3028384584
 
 #-------------------------Tabla provedores-------------------------------
 #----------fondo menu tabla provedores---------
+
+def loadNewProveedores():
+    changeState(entryMenuTablaProveedores1,0)
+    changeState(entryMenuTablaProveedores2,0)
+    changeState(entryMenuTablaProveedores3,0)
+
+def loadTablaProveedores():
+    global d
+    d=1
+    limpiarTablas(4)
+    datos=dao.getTableInfo(4)
+    for row in datos:
+            tablaProveedores.insert("",END,text=row[0], values=(row[1],row[2]))
+    changeState(entryMenuTablaProveedores1,1)
+    changeState(entryMenuTablaProveedores2,1)
+    changeState(entryMenuTablaProveedores3,1)
+    changeState(btGuardarProveedores,0)
+    changeState(btActualizarProveedores,0)
+    changeState(btBorrarProveedores,0)
+    framesManager(menuTablaProveedores)
+
+def guardarProveedores():
+    global d
+    proveedor=(entryMenuTablaProveedores1.get(),entryMenuTablaProveedores2.get(),entryMenuTablaProveedores3.get())
+    if d==1:
+        dao.newProveedor(proveedor)
+    else:
+        dao.updateProvedor(proveedor)
+        d=1
+    cleanEntry(entryMenuTablaProveedores1)
+    cleanEntry(entryMenuTablaProveedores2)
+    cleanEntry(entryMenuTablaProveedores3)
+    changeState(entryMenuTablaProveedores1,1)
+    changeState(entryMenuTablaProveedores2,1)
+    changeState(entryMenuTablaProveedores3,1)
+    changeState(btGuardarProveedores,0)
+    changeState(btActualizarProveedores,0)
+    changeState(btBorrarProveedores,0)
+    limpiarTablas(4)
+    loadTablaProveedores()
+
+def modificarProveedores():
+    global d
+    d=d+1
+    selected = tablaProveedores.focus()
+    codprod = tablaProveedores.item(selected,'text')
+    if codprod== '':
+        messagebox.showwarning("Modificar", 'Debes seleccionar un elemento.')
+    else:
+        changeState(entryMenuTablaProveedores1,0)
+        changeState(entryMenuTablaProveedores2,0)
+        changeState(entryMenuTablaProveedores3,0)
+        valores = tablaProveedores.item(selected,'values')
+        nombre= tablaProveedores.item(selected,'text')
+        cleanEntry(entryMenuTablaProveedores1)
+        cleanEntry(entryMenuTablaProductos2)
+        cleanEntry(entryMenuTablaProductos3)
+        entryMenuTablaProveedores1.insert(0,nombre)
+        entryMenuTablaProveedores2.insert(0,valores[0])
+        entryMenuTablaProveedores3.insert(0,valores[1])
+        changeState(btGuardarProveedores,0)
+        changeState(btActualizarProveedores,0)
+        changeState(btBorrarProveedores,0)
+        entryMenuTablaProveedores1.focus()
+    return True
+
+def eliminarProveedore():
+    selected= tablaProveedores.focus()
+
+    nombre= tablaProveedores.item(selected,'text')
+    if nombre=="":
+        messagebox.showinfo(title="Error", message="Seleccione un elemento")
+    else:
+        valores= tablaProveedores.item(selected,'values')
+        data= str(nombre)+ ", " + valores[0]+ ", " + valores[1]
+        r=messagebox.askquestion("Eliminar", "Deseas eliminar el registro seleccionado?\n" +data)
+        if r==messagebox.YES:
+            n = dao.deleteProveedor(nombre)
+            if n == 1:
+                messagebox.showinfo(title="Eliminado", message="Elemento eliminado correctamente")
+                limpiarTablas(1)
+            else:
+                messagebox.showinfo(title="Error", message="No fue posible eliminar el elemento seleccionado")
+    loadTablaProveedores()
+
 fondoMenuTablaProveedores=Label(menuTablaProveedores, image=bgMenuTablaProveedores).place(x=0,y=0,relheight=1,relwidth=1)
 
     #entries menu tabla productos
